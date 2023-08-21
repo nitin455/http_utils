@@ -5,7 +5,7 @@ import (
 	"http_utils/pkg/errors"
 	"time"
 
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 
 	"net/url"
 	"strings"
@@ -27,7 +27,6 @@ func WithBaseUrl(baseUrl string) ClientConfigOpt {
 		}
 
 		config.BaseUrl = &u
-		log.Info("Set baseUrl ", baseUrl)
 	}
 }
 
@@ -75,5 +74,17 @@ func WithHTTPRequestProxyUrl(proxyUrl *url.URL) ClientConfigOpt {
 func WithRetry() ClientConfigOpt {
 	return func(clientConfig *config.ClientConfig) {
 		clientConfig.RetryOnFailure = true
+	}
+}
+
+func WithMaxRetryAttempts(attempts int) ClientConfigOpt {
+	return func(clientConfig *config.ClientConfig) {
+		clientConfig.MaxRetryAttempts = attempts
+	}
+}
+
+func WithLogger(logger *zap.Logger) ClientConfigOpt {
+	return func(clientConfig *config.ClientConfig) {
+		clientConfig.Logger = logger
 	}
 }
